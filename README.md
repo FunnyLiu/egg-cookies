@@ -1,3 +1,50 @@
+# 源码分析
+
+通过app.keys来加解密cookie。多个key进行轮换密钥。
+
+## 文件结构
+
+``` bash
+├── lib
+|  ├── cookie.js - 单个cookie类，拼接cookie具体的字符串
+|  ├── cookies.js - 对外入口，接收ctx和keys列表。基于cookie.js拼接单个cookie，基于kyegrip加解密
+|  └── keygrip.js - 加密解密类，基于原生crypto模块
+
+
+ignored: directory (1)
+
+```
+
+## 外部模块依赖
+
+请在： http://npm.broofa.com?q=egg-cookies 查看
+
+## 内部模块依赖
+
+![img](./inner.svg)
+
+## 逐行文件分析
+
+### cookies.js
+
+对外入口，接收ctx和keys列表。
+keys列表的为了轮换密钥，防止更换密钥后，客户端失效。
+每个key对应的值基于keygrip.js来加密和解密。
+每个具体的cookie基于cookie.js来承载。
+
+### cookie.js
+
+单个cookie类，拼接cookie具体的字符串
+
+### keygrip.js
+
+加密解密类，基于原生crypto模块。
+解密时会多个key来进行尝试，防止更换key后客户端失效。
+
+
+
+
+
 # egg-cookies
 
 [![NPM version][npm-image]][npm-url]
